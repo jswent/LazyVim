@@ -217,6 +217,11 @@ return {
       -- local events = require("neo-tree.events")
       opts.filesystem = vim.tbl_deep_extend("force", opts.filesystem, {
         hijack_netrw_behavior = "open_current",
+        filtered_items = {
+          never_show = {
+            ".DS_Store",
+          },
+        },
       })
       opts.event_handlers = opts.event_handlers or {}
       vim.list_extend(opts.event_handlers, {
