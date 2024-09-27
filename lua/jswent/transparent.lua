@@ -28,4 +28,35 @@ function M.set_state(new_state)
   end
 end
 
+function M.check_startup()
+  -- TODO: change to using $TRANSPARENT environment variable set by terminal emulator
+  local wezterm_executable = os.getenv("WEZTERM_EXECUTABLE")
+  local kitty_listen_on = os.getenv("KITTY_LISTEN_ON")
+
+  local is_wezterm = wezterm_executable ~= nil and wezterm_executable ~= ""
+  local is_kitty = kitty_listen_on ~= nil and kitty_listen_on ~= ""
+
+  if is_wezterm or is_kitty then
+    state = true
+  end
+end
+
+function M.create_commands()
+  -- Command to enable transparency
+  vim.api.nvim_create_user_command("EnableTransparent", function()
+    M.set_state(true)
+  end, { nargs = 0 })
+  -- Command to disable transparency
+  vim.api.nvim_create_user_command("DisableTransparent", function()
+    M.set_state(false)
+  end, { nargs = 0 })
+  -- Command to toggle transparency
+  vim.api.nvim_create_user_command("ToggleTransparent", function()
+    M.set_state(not state)
+  end, { nargs = 0 })
+end
+
+M.check_startup()
+M.create_commands()
+
 return M
