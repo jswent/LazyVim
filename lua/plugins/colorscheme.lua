@@ -22,6 +22,11 @@ return {
           sidebars = "transparent",
           floats = "transparent",
         })
+        opts.on_highlights = function(hl, c)
+          if vim.o.background == "light" then
+            hl.NeoTreeFileStats = { link = "NeoTreeGitModified" }
+          end
+        end
       end
     end,
   },
