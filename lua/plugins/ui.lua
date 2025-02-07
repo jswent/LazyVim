@@ -120,19 +120,74 @@ return {
   },
 
   {
-    "nvimdev/dashboard-nvim",
-    event = "VimEnter",
+    "folke/snacks.nvim",
     opts = function(_, opts)
-      local logo = [[
-      ███████╗██╗   ██╗██╗███╗   ███╗ 
-      ██╔════╝██║   ██║██║████╗ ████║ 
-      ███████╗██║   ██║██║██╔████╔██║ 
-      ╚════██║╚██╗ ██╔╝██║██║╚██╔╝██║ 
-      ███████║ ╚████╔╝ ██║██║ ╚═╝ ██║ 
-      ╚══════╝  ╚═══╝  ╚═╝╚═╝     ╚═╝ 
-      ]]
-      logo = string.rep("\n", 8) .. logo .. "\n\n"
-      opts.config.header = vim.split(logo, "\n")
+      local is_large_window = vim.o.columns >= 120
+
+      opts.dashboard = vim.tbl_deep_extend("force", opts.dashboard, {
+        preset = vim.tbl_deep_extend("force", opts.dashboard.preset or {}, {
+          header = [[
+███████╗██╗   ██╗██╗███╗   ███╗ 
+██╔════╝██║   ██║██║████╗ ████║ 
+███████╗██║   ██║██║██╔████╔██║ 
+╚════██║╚██╗ ██╔╝██║██║╚██╔╝██║ 
+███████║ ╚████╔╝ ██║██║ ╚═╝ ██║ 
+╚══════╝  ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+        }),
+        sections = (function()
+          local sections = { { section = "header" } }
+
+          if is_large_window then
+            table.insert(sections, {
+              pane = 2,
+              section = "terminal",
+              cmd = require("jswent.functions").colorscripts.square,
+              height = 6,
+              padding = 1,
+            })
+          end
+
+          table.insert(sections, { section = "keys", gap = 1, padding = 1 })
+
+          if is_large_window then
+            table.insert(sections, {
+              pane = 2,
+              icon = " ",
+              title = "Recent Files",
+              section = "recent_files",
+              indent = 2,
+              padding = 1,
+            })
+            table.insert(sections, {
+              pane = 2,
+              icon = " ",
+              title = "Projects",
+              section = "projects",
+              indent = 2,
+              padding = 1,
+            })
+            table.insert(sections, {
+              pane = 2,
+              icon = " ",
+              title = "Git Status",
+              section = "terminal",
+              enabled = function()
+                return Snacks.git.get_root() ~= nil
+              end,
+              cmd = "git status --short --branch --renames",
+              height = 5,
+              padding = 1,
+              ttl = 5 * 60,
+              indent = 3,
+            })
+          end
+
+          table.insert(sections, { section = "startup" })
+          return sections
+        end)(),
+      })
+
+      return opts
     end,
   },
 }
