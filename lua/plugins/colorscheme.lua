@@ -26,6 +26,7 @@ return {
           if vim.o.background == "light" then
             hl.NeoTreeFileStats = { link = "NeoTreeGitModified" }
           end
+          hl.WinBarNC = { link = "WinBar" }
         end
       end
     end,
