@@ -136,14 +136,16 @@ return {
         }),
         sections = (function()
           local sections = { { section = "header" } }
+          local colorscripts = require("jswent.colorscripts")
+          local random_colorscript = colorscripts.random()
 
           if is_large_window then
             table.insert(sections, {
               pane = 2,
               section = "terminal",
-              cmd = require("jswent.functions").colorscripts.square,
-              height = 6,
-              padding = 1,
+              cmd = random_colorscript.cmd,
+              height = random_colorscript.height,
+              padding = random_colorscript.padding,
             })
           end
 
