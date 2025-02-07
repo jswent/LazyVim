@@ -188,6 +188,30 @@ M.telescope = {
   },
 }
 
+M.dashboard = {
+  enabled = function()
+    return require("lazy.core.config").spec.plugins["dashboard-nvim"] ~= nil
+  end,
+  config = {
+    {
+      "nvimdev/dashboard-nvim",
+      event = "VimEnter",
+      opts = function(_, opts)
+        local logo = [[
+      ███████╗██╗   ██╗██╗███╗   ███╗ 
+      ██╔════╝██║   ██║██║████╗ ████║ 
+      ███████╗██║   ██║██║██╔████╔██║ 
+      ╚════██║╚██╗ ██╔╝██║██║╚██╔╝██║ 
+      ███████║ ╚████╔╝ ██║██║ ╚═╝ ██║ 
+      ╚══════╝  ╚═══╝  ╚═╝╚═╝     ╚═╝ 
+      ]]
+        logo = string.rep("\n", 8) .. logo .. "\n\n"
+        opts.config.header = vim.split(logo, "\n")
+      end,
+    },
+  },
+}
+
 -- Add more extras here following the same pattern
 -- Example:
 -- M.some_feature = {

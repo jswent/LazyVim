@@ -126,4 +126,9 @@ function M.smart_quit()
   end
 end
 
+function M.is_plugin_loaded(plugin_name)
+  local plugin = vim.tbl_get(require("lazy.core.config"), "plugins", plugin_name)
+  return plugin and plugin._.loaded and plugin._.loaded.start == "start" or false
+end
+
 return M
