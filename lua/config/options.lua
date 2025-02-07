@@ -4,5 +4,7 @@
 
 require("jswent.winbar")
 
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- vim.g.snacks_animate = true
+
+-- vim.g.lazyvim_picker = "auto"
+vim.g.lazyvim_cmp = "nvim-cmp"
