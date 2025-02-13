@@ -1,58 +1,31 @@
 return {
-  {
-    "nvim-cmp",
-    event = "VeryLazy",
-    dependencies = {
-      "hrsh7th/cmp-cmdline",
-    },
-    ---@param opts cmp.ConfigSchema
-    opts = function(_, opts)
-      local cmp = require("cmp")
-      cmp.setup.cmdline(":", {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = "path" },
-        }, {
-          {
-            name = "cmdline",
-            option = {
-              ignore_cmds = { "Man", "!" },
-            },
-          },
-        }),
-      })
-      cmp.setup.filetype("markdown.mdx", {
-        enabled = false,
-      })
-      opts.mapping = vim.tbl_deep_extend("force", opts.mapping, {
-        ["<C-k>"] = cmp.mapping.select_prev_item(),
-        ["<C-j>"] = cmp.mapping.select_next_item(),
-        ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
-        ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
-        ["<C-e>"] = cmp.mapping({
-          i = cmp.mapping.abort(),
-          c = cmp.mapping.close(),
-        }),
-        ["<CR>"] = cmp.mapping.confirm({ select = false }),
-        -- ["<Tab>"] = cmp.mapping(function(fallback)
-        --   if cmp.visible() then
-        --     cmp.select_next_item()
-        --   else
-        --     fallback()
-        --   end
-        -- end, { "i", "s" }),
-        -- ["<S-Tab>"] = cmp.mapping(function(fallback)
-        --   if cmp.visible() then
-        --     cmp.select_prev_item()
-        --   else
-        --     fallback()
-        --   end
-        -- end, { "i", "s" }),
-      })
-    end,
-  },
 
   { "akinsho/bufferline.nvim", enabled = false },
+
+  {
+    "saghen/blink.cmp",
+    lazy = true,
+    ---@module "blink.cmp"
+    ---@param opts blink.cmp.Config
+    opts = function(_, opts)
+      opts.sources.cmdline = function()
+        local type = vim.fn.getcmdtype()
+        -- Commands
+        if type == ":" or type == "@" then
+          return { "cmdline" }
+        end
+        return {}
+      end
+      opts.sources.min_keyword_length = function(ctx)
+        -- only applies when typing a command, doesn't apply to arguments
+        if ctx.mode == "cmdline" and string.find(ctx.line, " ") == nil then
+          return 3
+        end
+        return 0
+      end
+      return opts
+    end,
+  },
 
   {
     "ghillb/cybu.nvim",
@@ -97,13 +70,14 @@ return {
         },
       })
       if transparent.get_state() == true then
-        opts.views = {
+        opts.views = opts.views or {}
+        opts.views = vim.tbl_deep_extend("force", opts.views, {
           mini = {
             win_options = {
               winblend = 0,
             },
           },
-        }
+        })
       end
     end,
   },
