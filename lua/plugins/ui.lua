@@ -23,6 +23,13 @@ return {
         end
         return 0
       end
+      opts.completion.menu.draw.columns = function(ctx)
+        if ctx.mode == "cmdline" then
+          return { { "label", "label_description", gap = 1 } }
+        else
+          return { { "kind_icon" }, { "label", "label_description", gap = 1 } }
+        end
+      end
       return opts
     end,
   },
