@@ -30,6 +30,10 @@ return {
           return { { "kind_icon" }, { "label", "label_description", gap = 1 } }
         end
       end
+      opts.keymap = vim.tbl_deep_extend("force", opts.keymap, {
+        ["<C-k>"] = { "select_prev", "fallback" },
+        ["<C-j>"] = { "select_next", "fallback" },
+      })
       return opts
     end,
   },
