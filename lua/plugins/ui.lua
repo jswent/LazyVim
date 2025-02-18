@@ -8,18 +8,22 @@ return {
     ---@module "blink.cmp"
     ---@param opts blink.cmp.Config
     opts = function(_, opts)
-      opts.sources.cmdline = function()
-        local type = vim.fn.getcmdtype()
-        -- Commands
-        if type == ":" or type == "@" then
-          return { "cmdline" }
-        end
-        return {}
-      end
+      --- @type blink.cmp.CmdlineConfig
+      opts.cmdline = {
+        enabled = true,
+        sources = function()
+          local type = vim.fn.getcmdtype()
+          -- Commands
+          if type == ":" or type == "@" then
+            return { "cmdline" }
+          end
+          return {}
+        end,
+      }
       opts.sources.min_keyword_length = function(ctx)
         -- only applies when typing a command, doesn't apply to arguments
         if ctx.mode == "cmdline" and string.find(ctx.line, " ") == nil then
-          return 3
+          return 4
         end
         return 0
       end
