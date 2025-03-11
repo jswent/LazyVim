@@ -32,11 +32,13 @@ function M.check_startup()
   -- TODO: change to using $TRANSPARENT environment variable set by terminal emulator
   local wezterm_executable = os.getenv("WEZTERM_EXECUTABLE")
   local kitty_listen_on = os.getenv("KITTY_LISTEN_ON")
+  local term = os.getenv("TERM")
 
   local is_wezterm = wezterm_executable ~= nil and wezterm_executable ~= ""
   local is_kitty = kitty_listen_on ~= nil and kitty_listen_on ~= ""
+  local is_ghostty = term == "xterm-ghostty"
 
-  if is_wezterm or is_kitty then
+  if is_wezterm or is_kitty or is_ghostty then
     state = true
   end
 end
