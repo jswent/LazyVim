@@ -31,4 +31,22 @@ return {
       end
     end,
   },
+  {
+    "rose-pine/neovim",
+    lazy = true,
+    priority = 1000,
+    config = function()
+      local opts = {}
+
+      local transparent = require("jswent.transparent")
+      if transparent.get_state() == true then
+        opts.styles = opts.styles or {}
+        opts.styles = vim.tbl_deep_extend("force", opts.styles, {
+          transparency = true,
+        })
+      end
+
+      require("rose-pine").setup(opts)
+    end,
+  },
 }
