@@ -1,6 +1,6 @@
 local M = {}
 
-local plugins = { "noice.nvim", "nvim-notify", "tokyonight.nvim" }
+local plugins = { "noice.nvim", "snacks.nvim", "tokyonight.nvim" }
 
 local function reload_plugins(plugin_array)
   local loader = require("lazy.core.loader")
