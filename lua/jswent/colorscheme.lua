@@ -1,6 +1,7 @@
 local DEFAULT_COLORS = "tokyonight"
 local DEFAULT_APPEARANCE = "system"
 local THEME_MAPPINGS = {
+  ["tokyonight"] = "tokyonight",
   ["rose-pine"] = "rose-pine",
 }
 
@@ -17,7 +18,7 @@ local function read_terminal_theme(terminal)
 
   local machfiles_dir = os.getenv("MACHFILES_DIR")
   local path
-  
+
   if machfiles_dir then
     path = string.format("%s/.%s-theme", machfiles_dir, terminal)
   else
@@ -50,6 +51,59 @@ function M.get_appearance()
   return appearance
 end
 
+function M.set_colors(new_colors)
+  colors = new_colors
+end
+
+-- Appearance should be set to "dark", "light", or "system"
+function M.set_appearance(new_appearance)
+  if new_appearance == "dark" then
+    appearance = "dark"
+  elseif new_appearance == "light" then
+    appearance = "light"
+  elseif new_appearance == "system" then
+    appearance = "system"
+  else
+    vim.notify("Invalid appearance value. Must be 'dark', 'light', or 'system'", vim.log.levels.ERROR)
+    return
+  end
+
+  M.apply_settings()
+end
+
+function M.apply_settings()
+  if appearance == "system" then
+    -- TODO: Add system detection logic
+    -- For now, using existing background as the system choice
+  else
+    vim.o.background = appearance
+  end
+
+  local ok, err = pcall(vim.cmd, string.format("colorscheme %s", colors))
+  if not ok then
+    vim.notify(string.format("Failed to apply colorscheme: %s", err), vim.log.levels.ERROR)
+  end
+end
+
+function M.toggle_appearance()
+  local prev_appearance = appearance
+
+  if appearance == "dark" then
+    appearance = "light"
+  elseif appearance == "light" then
+    appearance = "dark"
+  elseif appearance == "system" then
+    if vim.o.background == "light" then
+      appearance = "dark"
+    elseif vim.o.background == "dark" then
+      appearance = "light"
+    end
+  end
+
+  -- Apply the change immediately
+  M.apply_settings()
+end
+
 function M.check_startup()
   local term = os.getenv("TERM")
 
@@ -62,13 +116,10 @@ function M.check_startup()
     return
   end
 
-  -- Look up theme in mappings
   local vim_theme = THEME_MAPPINGS[theme_contents]
   if vim_theme then
-    local ok, err = pcall(vim.cmd, string.format("colorscheme %s", vim_theme))
-    if not ok then
-      vim.notify(string.format("Failed to set colorscheme: %s", err), vim.log.levels.ERROR)
-    end
+    M.set_colors(vim_theme)
+    M.apply_settings() -- Apply the settings
   end
 end
 
