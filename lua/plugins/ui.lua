@@ -8,6 +8,12 @@ return {
     ---@module "blink.cmp"
     ---@param opts blink.cmp.Config
     opts = function(_, opts)
+      opts.enabled = function()
+        if vim.tbl_contains({ "markdown" }, vim.bo.filetype) then
+          return false
+        end
+        return vim.bo.buftype ~= "prompt" and vim.b.completion ~= false
+      end
       --- @type blink.cmp.CmdlineConfig
       opts.cmdline = {
         enabled = true,
