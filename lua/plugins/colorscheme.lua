@@ -32,10 +32,13 @@ return {
     end,
   },
   {
-    "rose-pine/neovim",
+    "jswent/rose-pine-nvim",
+    name = "rose-pine",
     lazy = true,
     priority = 1000,
     config = function()
+      ---@module "rose-pine.config"
+      ---@type Options
       local opts = {}
 
       local transparent = require("jswent.transparent")
