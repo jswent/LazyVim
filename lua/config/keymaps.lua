@@ -2,16 +2,23 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-local keymap = vim.api.nvim_set_keymap
+local map = LazyVim.safe_keymap_set
 local opts = { noremap = true, silent = true }
 
 -- saving
-keymap("n", "<c-s>", ":wq<CR>", {})
-keymap("i", "<c-s>", "<Esc>:w<CR>a", {})
+map("n", "<c-s>", ":wq<CR>", {})
+map("i", "<c-s>", "<Esc>:w<CR>a", {})
 
 -- remove buffer
-keymap("n", "Q", "<cmd>Bdelete<CR>", opts)
+map("n", "Q", "<cmd>Bdelete<CR>", opts)
 
 -- cybu
-keymap("n", "<m-j>", "<Plug>(CybuNext)", opts)
-keymap("n", "<m-k>", "<Plug>(CybuPrev)", opts)
+map("n", "<m-j>", "<Plug>(CybuNext)", opts)
+map("n", "<m-k>", "<Plug>(CybuPrev)", opts)
+
+-- terminal
+if os.getenv("THEME") == "starship" then
+  map("n", "<c-/>", function()
+    Snacks.terminal(nil, { cwd = LazyVim.root(), env = { THEME_OVERRIDE = "starship" } })
+  end, { desc = "Terminal (Root Dir)" })
+end
