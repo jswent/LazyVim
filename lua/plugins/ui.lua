@@ -118,11 +118,17 @@ return {
     "folke/snacks.nvim",
     ---@param opts snacks.Config
     opts = function(_, opts)
+      -- Snacks.picker configuration
       opts.picker = opts.picker or {}
-      opts.picker = vim.tbl_deep_extend("force", opts.picker, {
-        frecency = true,
-      })
 
+      opts.picker.matcher = opts.picker.matcher or {}
+      opts.picker.matcher.frecency = true
+
+      opts.picker.sources = opts.picker.sources or {}
+      opts.picker.sources.files = opts.picker.sources.files or {}
+      opts.picker.sources.files.hidden = true
+
+      -- Snacks.dashboard configuration
       local is_large_window = vim.o.columns >= 120
       opts.dashboard = vim.tbl_deep_extend("force", opts.dashboard, {
         preset = vim.tbl_deep_extend("force", opts.dashboard.preset or {}, {
