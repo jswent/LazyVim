@@ -190,7 +190,8 @@ M.telescope = {
 
 M.dashboard = {
   enabled = function()
-    return require("lazy.core.config").spec.plugins["dashboard-nvim"] ~= nil
+    -- return require("lazy.core.config").spec.plugins["dashboard-nvim"] ~= nil
+    return false
   end,
   config = {
     {
