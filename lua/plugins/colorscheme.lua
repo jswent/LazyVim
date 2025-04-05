@@ -32,6 +32,27 @@ return {
     end,
   },
   {
+    "ellisonleao/gruvbox.nvim",
+    lazy = true,
+    priority = 1000,
+    config = function()
+      ---@module "gruvbox"
+      ---@type GruvboxConfig
+      local opts = {
+        dim_inactive = false,
+        transparent_mode = false,
+      }
+
+      local transparent = require("jswent.transparent")
+      if transparent.get_state() == true then
+        opts.dim_inactive = false
+        opts.transparent_mode = true
+      end
+
+      require("gruvbox").setup(opts)
+    end,
+  },
+  {
     "jswent/rose-pine-nvim",
     name = "rose-pine",
     lazy = true,

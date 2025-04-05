@@ -1,7 +1,8 @@
-local DEFAULT_COLORS = "tokyonight"
+local DEFAULT_COLORS = vim.g.lazyvim_colorscheme or "tokyonight"
 local DEFAULT_APPEARANCE = "system"
 local THEME_MAPPINGS = {
   ["tokyonight"] = "tokyonight",
+  ["gruvbox"] = "gruvbox",
   ["rose-pine"] = "rose-pine",
 }
 
@@ -52,6 +53,7 @@ function M.get_appearance()
 end
 
 function M.set_colors(new_colors)
+  -- TODO: Handle validation and apply settings here
   colors = new_colors
 end
 
@@ -86,8 +88,6 @@ function M.apply_settings()
 end
 
 function M.toggle_appearance()
-  local prev_appearance = appearance
-
   if appearance == "dark" then
     appearance = "light"
   elseif appearance == "light" then
@@ -108,6 +108,7 @@ function M.check_startup()
   local term = os.getenv("TERM")
 
   if term ~= "xterm-ghostty" then
+    M.apply_settings()
     return
   end
 

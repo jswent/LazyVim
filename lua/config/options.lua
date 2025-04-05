@@ -7,3 +7,6 @@ require("jswent.winbar")
 -- vim.g.snacks_animate = true
 
 vim.g.lazyvim_picker = "snacks"
+
+-- use this to override the default colorscheme, see jswent.colorscheme
+-- vim.g.lazyvim_colorscheme = "gruvbox"
