@@ -30,6 +30,12 @@ end
 
 function M.check_startup()
   -- TODO: change to using $TRANSPARENT environment variable set by terminal emulator
+  local cfg_transparent = vim.g.jswent_transparent
+  if cfg_transparent ~= nil and type(cfg_transparent) == "boolean" then
+    state = cfg_transparent
+    return
+  end
+
   local wezterm_executable = os.getenv("WEZTERM_EXECUTABLE")
   local kitty_listen_on = os.getenv("KITTY_LISTEN_ON")
   local term = os.getenv("TERM")

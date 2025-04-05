@@ -9,4 +9,7 @@ require("jswent.winbar")
 vim.g.lazyvim_picker = "snacks"
 
 -- use this to override the default colorscheme, see jswent.colorscheme
--- vim.g.lazyvim_colorscheme = "gruvbox"
+-- vim.g.jswent_colorscheme = "gruvbox"
+
+-- use this to override the transparency; ghostty, wezterm, kitty supported by default
+-- vim.g.jswent_transparency = true

@@ -1,4 +1,4 @@
-local DEFAULT_COLORS = vim.g.lazyvim_colorscheme or "tokyonight"
+local DEFAULT_COLORS = vim.g.jswent_colorscheme or "tokyonight"
 local DEFAULT_APPEARANCE = "system"
 local THEME_MAPPINGS = {
   ["tokyonight"] = "tokyonight",
