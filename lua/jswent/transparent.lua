@@ -1,6 +1,6 @@
 local M = {}
 
-local plugins = { "noice.nvim", "rose-pine", "snacks.nvim", "tokyonight.nvim" }
+local plugins = { "noice.nvim", "rose-pine", "tokyonight.nvim" }
 
 local function reload_plugins(plugin_array)
   local loader = require("lazy.core.loader")
@@ -13,12 +13,14 @@ local function reload_plugins(plugin_array)
   vim.cmd("colorscheme " .. colors_name)
 end
 
+---@type boolean
 local state = false
 
 function M.get_state()
   return state
 end
 
+---@param new_state boolean
 function M.set_state(new_state)
   if type(new_state) == "boolean" then
     state = new_state
@@ -62,6 +64,20 @@ function M.create_commands()
   vim.api.nvim_create_user_command("ToggleTransparent", function()
     M.set_state(not state)
   end, { nargs = 0 })
+end
+
+---@param opts? snacks.toggle.Config
+function M.create_toggle(opts)
+  return Snacks.toggle.new({
+    id = "transparent",
+    name = "Transparent Mode",
+    get = function()
+      return M.get_state()
+    end,
+    set = function(new_state)
+      M.set_state(new_state)
+    end,
+  }, opts)
 end
 
 M.check_startup()
