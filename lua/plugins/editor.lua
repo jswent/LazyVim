@@ -1,14 +1,4 @@
 return {
-  -- {
-  --   "folke/which-key.nvim",
-  --   event = "VeryLazy",
-  --   opts = function(_, opts)
-  --     opts.defaults = vim.tbl_deep_extend("force", opts.defaults, {
-  --       ["<leader>f"] = { name = "+find" },
-  --     })
-  --   end,
-  -- },
-
   {
     "SmiteshP/nvim-navic",
     lazy = true,
@@ -28,46 +18,6 @@ return {
         icons = require("lazyvim.config").icons.kinds,
         lazy_update_context = true,
       }
-    end,
-  },
-
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    opts = function(_, opts)
-      -- local events = require("neo-tree.events")
-      opts.filesystem = vim.tbl_deep_extend("force", opts.filesystem, {
-        hijack_netrw_behavior = "open_current",
-        filtered_items = {
-          never_show = {
-            ".DS_Store",
-          },
-        },
-      })
-      opts.event_handlers = opts.event_handlers or {}
-      vim.list_extend(opts.event_handlers, {
-        {
-          event = "neo_tree_window_after_close",
-          handler = function(args)
-            if args.position == "left" or args.position == "right" then
-              vim.cmd("wincmd =")
-            end
-          end,
-        },
-        {
-          event = "neo_tree_window_after_open",
-          handler = function(args)
-            if args.position == "left" or args.position == "right" then
-              vim.cmd("wincmd =")
-            end
-          end,
-        },
-        -- {
-        --   event = events.FILE_OPENED,
-        --   handler = function(file_path)
-        --     require("neo-tree.command").execute({})
-        --   end,
-        -- },
-      })
     end,
   },
 

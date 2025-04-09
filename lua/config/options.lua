@@ -8,6 +8,8 @@ require("jswent.winbar")
 
 vim.g.lazyvim_picker = "snacks"
 
+vim.g.lazyvim_explorer = "neo-tree"
+
 -- use this to override the default colorscheme, see jswent.colorscheme
 -- vim.g.jswent_colorscheme = "gruvbox"
 

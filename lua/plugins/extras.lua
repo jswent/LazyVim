@@ -273,6 +273,47 @@ M.nvim_cmp = {
   },
 }
 
+M.neo_tree = {
+  enabled = function()
+    return vim.g.lazyvim_explorer == "neo-tree"
+  end,
+  config = {
+    {
+      "nvim-neo-tree/neo-tree.nvim",
+      ---@param opts neotree.Config
+      opts = function(_, opts)
+        opts.filesystem = vim.tbl_deep_extend("force", opts.filesystem, {
+          hijack_netrw_behavior = "open_current",
+          filtered_items = {
+            never_show = {
+              ".DS_Store",
+            },
+          },
+        })
+        opts.event_handlers = opts.event_handlers or {}
+        vim.list_extend(opts.event_handlers, {
+          {
+            event = "neo_tree_window_after_close",
+            handler = function(args)
+              if args.position == "left" or args.position == "right" then
+                vim.cmd("wincmd =")
+              end
+            end,
+          },
+          {
+            event = "neo_tree_window_after_open",
+            handler = function(args)
+              if args.position == "left" or args.position == "right" then
+                vim.cmd("wincmd =")
+              end
+            end,
+          },
+        })
+      end,
+    },
+  },
+}
+
 -- Add more extras here following the same pattern
 -- Example:
 -- M.some_feature = {
