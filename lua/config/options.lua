@@ -15,3 +15,6 @@ vim.g.lazyvim_explorer = "neo-tree"
 
 -- use this to override the transparency; ghostty, wezterm, kitty supported by default
 -- vim.g.jswent_transparency = true
+
+-- use this to enable/disable cybu.nvim
+-- vim.g.jswent_cybu_enabled = true

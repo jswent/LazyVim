@@ -50,9 +50,12 @@ return {
 
   {
     "ghillb/cybu.nvim",
+    enabled = function()
+      return vim.g.jswent_cybu_enabled
+    end,
     lazy = false,
-    config = function(_, opts)
-      local cybu = require("cybu")
+    config = function()
+      local opts = {}
 
       opts.position = {
         relative_to = "win",
@@ -72,7 +75,7 @@ return {
         },
       }
 
-      cybu.setup(opts)
+      require("cybu").setup(opts)
     end,
   },
 
