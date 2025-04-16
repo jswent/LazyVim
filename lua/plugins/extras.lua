@@ -280,6 +280,7 @@ M.neo_tree = {
   config = {
     {
       "nvim-neo-tree/neo-tree.nvim",
+      ---@module "neo-tree"
       ---@param opts neotree.Config
       opts = function(_, opts)
         opts.filesystem = vim.tbl_deep_extend("force", opts.filesystem, {
