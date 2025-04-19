@@ -1,7 +1,7 @@
 return {
   {
     "SmiteshP/nvim-navic",
-    lazy = true,
+    event = "VimEnter",
     commit = "8649f694d3e76ee10c19255dece6411c29206a54",
     init = function()
       vim.g.navic_silence = true
@@ -19,6 +19,9 @@ return {
         icons = LazyVim.config.icons.kinds,
         lazy_update_context = true,
       }
+    end,
+    config = function()
+      require("jswent.winbar")
     end,
   },
 
