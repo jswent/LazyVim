@@ -2,6 +2,7 @@ return {
   {
     "SmiteshP/nvim-navic",
     lazy = true,
+    commit = "8649f694d3e76ee10c19255dece6411c29206a54",
     init = function()
       vim.g.navic_silence = true
       require("lazyvim.util").lsp.on_attach(function(client, buffer)
@@ -15,7 +16,7 @@ return {
         separator = " ",
         highlight = true,
         depth_limit = 5,
-        icons = require("lazyvim.config").icons.kinds,
+        icons = LazyVim.config.icons.kinds,
         lazy_update_context = true,
       }
     end,
