@@ -70,7 +70,7 @@ end
 function M.create_toggle(opts)
   return Snacks.toggle.new({
     id = "transparent",
-    name = "Transparent Mode",
+    name = "Transparent Background",
     get = function()
       return M.get_state()
     end,

@@ -17,6 +17,10 @@ return {
       --- @type blink.cmp.CmdlineConfig
       opts.cmdline = {
         enabled = true,
+        keymap = {
+          -- ["<Tab>"] = { "show", "accept" },
+          ["<C-Space>"] = { "accept" },
+        },
         sources = function()
           local type = vim.fn.getcmdtype()
           -- Commands
@@ -25,6 +29,7 @@ return {
           end
           return {}
         end,
+        completion = { ghost_text = { enabled = true } },
       }
       opts.sources.min_keyword_length = function(ctx)
         -- only applies when typing a command, doesn't apply to arguments
