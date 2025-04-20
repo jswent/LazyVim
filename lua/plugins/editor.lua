@@ -12,6 +12,7 @@ return {
       end)
     end,
     opts = function()
+      require("jswent.winbar")
       return {
         separator = " ",
         highlight = true,
@@ -19,9 +20,6 @@ return {
         icons = LazyVim.config.icons.kinds,
         lazy_update_context = true,
       }
-    end,
-    config = function()
-      require("jswent.winbar")
     end,
   },
 
