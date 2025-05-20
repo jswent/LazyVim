@@ -1,3 +1,4 @@
+---@class jswent.transparent
 local M = {}
 
 local plugins = { "noice.nvim", "rose-pine", "tokyonight.nvim" }
@@ -31,22 +32,14 @@ function M.set_state(new_state)
 end
 
 function M.check_startup()
-  -- TODO: change to using $TRANSPARENT environment variable set by terminal emulator
   local cfg_transparent = vim.g.jswent_transparent
   if cfg_transparent ~= nil and type(cfg_transparent) == "boolean" then
     state = cfg_transparent
     return
   end
 
-  local wezterm_executable = os.getenv("WEZTERM_EXECUTABLE")
-  local kitty_listen_on = os.getenv("KITTY_LISTEN_ON")
-  local term = os.getenv("TERM")
-
-  local is_wezterm = wezterm_executable ~= nil and wezterm_executable ~= ""
-  local is_kitty = kitty_listen_on ~= nil and kitty_listen_on ~= ""
-  local is_ghostty = term == "xterm-ghostty"
-
-  if is_wezterm or is_kitty or is_ghostty then
+  local env_transparent = os.getenv("TRANSPARENT")
+  if env_transparent == "true" then
     state = true
   end
 end
