@@ -17,6 +17,10 @@ return {
       --- @type blink.cmp.CmdlineConfig
       opts.cmdline = {
         enabled = true,
+        keymap = {
+          -- ["<Tab>"] = { "show", "accept" },
+          ["<C-Space>"] = { "accept" },
+        },
         sources = function()
           local type = vim.fn.getcmdtype()
           -- Commands
@@ -25,6 +29,7 @@ return {
           end
           return {}
         end,
+        completion = { ghost_text = { enabled = true } },
       }
       opts.sources.min_keyword_length = function(ctx)
         -- only applies when typing a command, doesn't apply to arguments
@@ -50,9 +55,12 @@ return {
 
   {
     "ghillb/cybu.nvim",
+    enabled = function()
+      return vim.g.jswent_cybu_enabled
+    end,
     lazy = false,
-    config = function(_, opts)
-      local cybu = require("cybu")
+    config = function()
+      local opts = {}
 
       opts.position = {
         relative_to = "win",
@@ -72,7 +80,7 @@ return {
         },
       }
 
-      cybu.setup(opts)
+      require("cybu").setup(opts)
     end,
   },
 
@@ -127,73 +135,6 @@ return {
       opts.picker.sources = opts.picker.sources or {}
       opts.picker.sources.files = opts.picker.sources.files or {}
       opts.picker.sources.files.hidden = true
-
-      -- Snacks.dashboard configuration
-      local is_large_window = vim.o.columns >= 120
-      opts.dashboard = vim.tbl_deep_extend("force", opts.dashboard, {
-        preset = vim.tbl_deep_extend("force", opts.dashboard.preset or {}, {
-          header = [[
-███████╗██╗   ██╗██╗███╗   ███╗ 
-██╔════╝██║   ██║██║████╗ ████║ 
-███████╗██║   ██║██║██╔████╔██║ 
-╚════██║╚██╗ ██╔╝██║██║╚██╔╝██║ 
-███████║ ╚████╔╝ ██║██║ ╚═╝ ██║ 
-╚══════╝  ╚═══╝  ╚═╝╚═╝     ╚═╝]],
-        }),
-        sections = (function()
-          local sections = { { section = "header" } }
-          local colorscripts = require("jswent.colorscripts")
-          local random_colorscript = colorscripts.random()
-
-          if is_large_window then
-            table.insert(sections, {
-              pane = 2,
-              section = "terminal",
-              cmd = random_colorscript.cmd,
-              height = random_colorscript.height,
-              padding = random_colorscript.padding,
-            })
-          end
-
-          table.insert(sections, { section = "keys", gap = 1, padding = 1 })
-
-          if is_large_window then
-            table.insert(sections, {
-              pane = 2,
-              icon = " ",
-              title = "Recent Files",
-              section = "recent_files",
-              indent = 2,
-              padding = 1,
-            })
-            table.insert(sections, {
-              pane = 2,
-              icon = " ",
-              title = "Projects",
-              section = "projects",
-              indent = 2,
-              padding = 1,
-            })
-            table.insert(sections, {
-              pane = 2,
-              icon = " ",
-              title = "Git Status",
-              section = "terminal",
-              enabled = function()
-                return Snacks.git.get_root() ~= nil
-              end,
-              cmd = "git status --short --branch --renames",
-              height = 5,
-              padding = 1,
-              ttl = 5 * 60,
-              indent = 3,
-            })
-          end
-
-          table.insert(sections, { section = "startup" })
-          return sections
-        end)(),
-      })
 
       return opts
     end,

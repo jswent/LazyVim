@@ -22,3 +22,5 @@ if os.getenv("THEME") == "starship" then
     Snacks.terminal(nil, { cwd = LazyVim.root(), env = { THEME_OVERRIDE = "starship" } })
   end, { desc = "Terminal (Root Dir)" })
 end
+
+require("jswent.transparent").create_toggle():map("<leader>ut")

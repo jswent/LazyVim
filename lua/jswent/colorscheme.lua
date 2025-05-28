@@ -1,16 +1,27 @@
-local DEFAULT_COLORS = vim.g.jswent_colorscheme or "tokyonight"
-local DEFAULT_APPEARANCE = "system"
-local THEME_MAPPINGS = {
-  ["tokyonight"] = "tokyonight",
-  ["gruvbox"] = "gruvbox",
-  ["rose-pine"] = "rose-pine",
-}
-
+---@class jswent.colorscheme
 local M = {}
 
-local colors = DEFAULT_COLORS
-local appearance = DEFAULT_APPEARANCE
+---@class jswent.colorscheme.Config
+---@field colors string
+---@field appearance "dark" | "light" | "system"
+---@field theme_mappings table<string,string>
+local defaults = {
+  colors = vim.g.jswent_colorscheme or "tokyonight",
+  appearance = "system",
+  theme_mappings = {
+    ["tokyonight"] = "tokyonight",
+    ["gruvbox"] = "gruvbox",
+    ["rose-pine"] = "rose-pine",
+  },
+}
 
+-- TODO: Allow for modular opts
+local colors = defaults.colors
+local appearance = defaults.appearance
+local theme_mappings = defaults.theme_mappings
+
+---@param terminal string The terminal name
+---@return string|nil theme The terminal theme or nil if not found
 local function read_terminal_theme(terminal)
   if not terminal then
     vim.notify("No terminal specified", vim.log.levels.ERROR)
@@ -44,20 +55,23 @@ local function read_terminal_theme(terminal)
   return content
 end
 
+---@return string colors The current colorscheme
 function M.get_colors()
   return colors
 end
 
+---@return "dark"|"light"|"system" appearance The current appearance setting
 function M.get_appearance()
   return appearance
 end
 
+---@param new_colors string The new colorscheme to set
 function M.set_colors(new_colors)
   -- TODO: Handle validation and apply settings here
   colors = new_colors
 end
 
--- Appearance should be set to "dark", "light", or "system"
+---@param new_appearance "dark"|"light"|"system" The new appearance to set
 function M.set_appearance(new_appearance)
   if new_appearance == "dark" then
     appearance = "dark"
@@ -117,7 +131,7 @@ function M.check_startup()
     return
   end
 
-  local vim_theme = THEME_MAPPINGS[theme_contents]
+  local vim_theme = theme_mappings[theme_contents]
   if vim_theme then
     M.set_colors(vim_theme)
     M.apply_settings() -- Apply the settings

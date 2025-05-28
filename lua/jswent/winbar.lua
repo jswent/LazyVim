@@ -1,3 +1,4 @@
+---@class jswent.winbar
 local M = {}
 
 M.winbar_filetype_exclude = {

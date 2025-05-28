@@ -1,17 +1,8 @@
 return {
-  -- {
-  --   "folke/which-key.nvim",
-  --   event = "VeryLazy",
-  --   opts = function(_, opts)
-  --     opts.defaults = vim.tbl_deep_extend("force", opts.defaults, {
-  --       ["<leader>f"] = { name = "+find" },
-  --     })
-  --   end,
-  -- },
-
   {
     "SmiteshP/nvim-navic",
-    lazy = true,
+    event = "VimEnter",
+    commit = "8649f694d3e76ee10c19255dece6411c29206a54",
     init = function()
       vim.g.navic_silence = true
       require("lazyvim.util").lsp.on_attach(function(client, buffer)
@@ -21,53 +12,14 @@ return {
       end)
     end,
     opts = function()
+      require("jswent.winbar")
       return {
         separator = " ",
         highlight = true,
         depth_limit = 5,
-        icons = require("lazyvim.config").icons.kinds,
+        icons = LazyVim.config.icons.kinds,
         lazy_update_context = true,
       }
-    end,
-  },
-
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    opts = function(_, opts)
-      -- local events = require("neo-tree.events")
-      opts.filesystem = vim.tbl_deep_extend("force", opts.filesystem, {
-        hijack_netrw_behavior = "open_current",
-        filtered_items = {
-          never_show = {
-            ".DS_Store",
-          },
-        },
-      })
-      opts.event_handlers = opts.event_handlers or {}
-      vim.list_extend(opts.event_handlers, {
-        {
-          event = "neo_tree_window_after_close",
-          handler = function(args)
-            if args.position == "left" or args.position == "right" then
-              vim.cmd("wincmd =")
-            end
-          end,
-        },
-        {
-          event = "neo_tree_window_after_open",
-          handler = function(args)
-            if args.position == "left" or args.position == "right" then
-              vim.cmd("wincmd =")
-            end
-          end,
-        },
-        -- {
-        --   event = events.FILE_OPENED,
-        --   handler = function(file_path)
-        --     require("neo-tree.command").execute({})
-        --   end,
-        -- },
-      })
     end,
   },
 

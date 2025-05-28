@@ -1,55 +1,5 @@
+---@class jswent.functions
 local M = {}
-
-vim.cmd([[
-  function Test()
-    %SnipRun
-    call feedkeys("\<esc>`.")
-  endfunction
-
-  function TestI()
-    let b:caret = winsaveview()    
-    %SnipRun
-    call winrestview(b:caret)
-  endfunction
-]])
-
-function M.sniprun_enable()
-  vim.cmd([[
-    %SnipRun
-
-    augroup _sniprun
-     autocmd!
-     autocmd TextChanged * call Test()
-     autocmd TextChangedI * call TestI()
-    augroup end
-  ]])
-  vim.notify("Enabled SnipRun")
-end
-
-function M.disable_sniprun()
-  M.remove_augroup("_sniprun")
-  vim.cmd([[
-    SnipClose
-    SnipTerminate
-    ]])
-  vim.notify("Disabled SnipRun")
-end
-
-function M.toggle_sniprun()
-  if vim.fn.exists("#_sniprun#TextChanged") == 0 then
-    M.sniprun_enable()
-  else
-    M.disable_sniprun()
-  end
-end
-
-function M.remove_augroup(name)
-  if vim.fn.exists("#" .. name) == 1 then
-    vim.cmd("au! " .. name)
-  end
-end
-
-vim.cmd([[ command! SnipRunToggle execute 'lua require("jswent.functions").toggle_sniprun()' ]])
 
 -- get length of current word
 function M.get_word_length()
@@ -57,12 +7,15 @@ function M.get_word_length()
   return #word
 end
 
+--- Toggle a boolean Vim option (e.g., 'relativenumber', 'spell').
+--- @param option string The name of the option to toggle.k
 function M.toggle_option(option)
   local value = not vim.api.nvim_get_option_value(option, {})
   vim.opt[option] = value
   vim.notify(option .. " set to " .. tostring(value))
 end
 
+--- Toggle the 'showtabline' option between always visible (2) and hidden (0).
 function M.toggle_tabline()
   local value = vim.api.nvim_get_option_value("showtabline", {})
 
@@ -78,6 +31,8 @@ function M.toggle_tabline()
 end
 
 local diagnostics_active = true
+
+--- Toggle diagnostics visibility (using Neovim's built-in LSP).
 function M.toggle_diagnostics()
   diagnostics_active = not diagnostics_active
   if diagnostics_active then
@@ -88,6 +43,8 @@ function M.toggle_diagnostics()
 end
 
 local virtualtext_active = true
+
+--- Toggle the display of virtual text in diagnostics.
 function M.toggle_virtualtext()
   virtualtext_active = not virtualtext_active
   if virtualtext_active then
@@ -97,12 +54,18 @@ function M.toggle_virtualtext()
   end
 end
 
+--- Check if a string is empty or nil.
+--- @param s string? The string to check.
+--- @return boolean True if the string is nil or empty, false otherwise.
 function M.isempty(s)
   return s == nil or s == ""
 end
 
+--- Safely get a buffer-local option from the current buffer.
+--- @param opt string The name of the buffer option.
+--- @return any|nil The option value, or nil if an error occurs.
 function M.get_buf_option(opt)
-  local status_ok, buf_option = pcall(vim.api.nvim_buf_get_option, 0, opt)
+  local status_ok, buf_option = pcall(vim.api.nvim_get_option_value, opt, { buf = 0 })
   if not status_ok then
     return nil
   else
@@ -110,9 +73,10 @@ function M.get_buf_option(opt)
   end
 end
 
+--- Smart quit: if the buffer is modified, prompt the user to confirm quitting.
 function M.smart_quit()
   local bufnr = vim.api.nvim_get_current_buf()
-  local modified = vim.api.nvim_buf_get_option(bufnr, "modified")
+  local _, modified = pcall(vim.api.nvim_get_option_value, "modified", { buf = bufnr })
   if modified then
     vim.ui.input({
       prompt = "You have unsaved changes. Quit anyway? (y/n) ",
@@ -126,6 +90,9 @@ function M.smart_quit()
   end
 end
 
+--- Check if a plugin is loaded (via Lazy.nvim).
+--- @param plugin_name string The name of the plugin to check.
+--- @return boolean True if the plugin is loaded, false otherwise.
 function M.is_plugin_loaded(plugin_name)
   local plugin = vim.tbl_get(require("lazy.core.config"), "plugins", plugin_name)
   return plugin and plugin._.loaded and plugin._.loaded.start == "start" or false

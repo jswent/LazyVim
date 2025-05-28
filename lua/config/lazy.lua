@@ -1,16 +1,26 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  -- bootstrap lazy.nvim
-  -- stylua: ignore
-  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
-vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
+vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({
+---@type LazyConfig
+local opts = {
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     -- import any extras modules here
+    { import = "lazyvim.plugins.extras.coding.yanky" },
     { import = "lazyvim.plugins.extras.lang.typescript" },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.lang.tailwind" },
@@ -26,13 +36,8 @@ require("lazy").setup({
     { import = "plugins" },
   },
   defaults = {
-    -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
-    -- If you know what you're doing, you can set this to `true` to have all your custom plugins lazy-loaded by default.
     lazy = true,
-    -- It's recommended to leave version=false for now, since a lot the plugin that support versioning,
-    -- have outdated releases, which may break your Neovim install.
     version = false, -- always use the latest git commit
-    -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
   install = { colorscheme = { "tokyonight", "habamax" } },
   checker = { enabled = false }, -- automatically check for plugin updates
@@ -51,4 +56,30 @@ require("lazy").setup({
       },
     },
   },
-})
+}
+
+-- add optional extras
+local extras = {
+  neo_tree = {
+    enabled = function()
+      return vim.g.lazyvim_explorer == "neo-tree"
+    end,
+    import = "lazyvim.plugins.extras.editor.neo-tree",
+  },
+  snacks_explorer = {
+    enabled = function()
+      return vim.g.lazyvim_explorer == "snacks"
+    end,
+    import = "lazyvim.plugins.extras.editor.snacks_explorer",
+  },
+}
+
+-- Extend opts.spec with enabled extras
+for name, extra in pairs(extras) do
+  local enabled = extra.enabled
+  if type(enabled) == "function" and enabled() or enabled == true then
+    table.insert(opts.spec, { import = extra.import })
+  end
+end
+
+require("lazy").setup(opts)
