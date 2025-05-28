@@ -1,3 +1,4 @@
+---@class jswent.colorscripts
 local M = {}
 
 M.random = function()
@@ -60,7 +61,7 @@ cat <<EOF
 EOF
 ]],
   height = 6,
-  padding = 1
+  padding = 1,
 }
 
 M.pacman = {
@@ -90,7 +91,7 @@ EOF
 ]],
   height = 8,
   padding = 1,
-  disabled = true
+  disabled = true,
 }
 
 M.panes = {
@@ -167,7 +168,7 @@ EOF
 ]],
   height = 15,
   padding = 2,
-  disabled = true
+  disabled = true,
 }
 
 M.thebat = {
@@ -208,7 +209,7 @@ ${reset}
 EOF
 ]],
   height = 6,
-  padding = 1
+  padding = 1,
 }
 
 M.tiefighter = {
@@ -247,7 +248,7 @@ ${reset}
 EOF
 ]],
   height = 7,
-  padding = 1
+  padding = 1,
 }
 
 return M

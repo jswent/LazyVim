@@ -14,8 +14,8 @@ vim.g.lazyvim_explorer = "neo-tree"
 -- Use this to override the default colorscheme, see jswent.colorscheme
 -- vim.g.jswent_colorscheme = "gruvbox"
 
--- Use this to override the transparency; ghostty, wezterm, kitty supported by default
--- vim.g.jswent_transparency = true
+-- Use this to override the transparency set by terminal emulator
+-- vim.g.jswent_transparent = true
 
 -- Use this to enable/disable cybu.nvim
 -- vim.g.jswent_cybu_enabled = true
