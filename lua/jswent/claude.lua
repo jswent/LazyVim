@@ -99,6 +99,10 @@ end
 function M.apply_keymaps(opts)
   opts = opts or {}
 
+  if vim.g.jswent_claude_enabled == false then
+    return
+  end
+
   for _, m in ipairs(M.get_keymaps()) do
     local keymap_opts = vim.tbl_deep_extend("force", { silent = true }, m.opts or {})
     if opts.bufnr then

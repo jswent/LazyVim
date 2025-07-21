@@ -17,5 +17,8 @@ vim.g.lazyvim_explorer = "neo-tree"
 -- Use this to override the transparency set by terminal emulator
 -- vim.g.jswent_transparent = true
 
--- Use this to enable/disable cybu.nvim
+-- Use this to enable/disable Claude code integration (default true)
+-- vim.g.jswent_claude_enabled = false
+
+-- Use this to enable/disable cybu.nvim (default false)
 -- vim.g.jswent_cybu_enabled = true
