@@ -5,6 +5,8 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
+local del = vim.keymap.del
+
 -- saving
 map("n", "<c-s>", ":wq<CR>", {})
 map("i", "<c-s>", "<Esc>:w<CR>a", {})
@@ -24,12 +26,8 @@ if os.getenv("THEME") == "starship" then
 end
 
 -- claude
--- note: this overrides the CodeLens keymaps
-if vim.fn.executable("claude") == 1 then
-  local claude = require("jswent.claude")
-  map("n", "<leader>cc", function() claude({ cwd = LazyVim.root.git() }) end, { desc = "Claude Code (Root Dir)" })
-  map("n", "<leader>cC", function() claude() end, { desc = "Claude Code (cwd)" })
-end
+-- note: lsp_attach overrides the default codelens keymaps
+require("jswent.claude").apply_keymaps({ lsp_attach = true })
 
 
 require("jswent.transparent").create_toggle():map("<leader>ut")

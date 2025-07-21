@@ -32,10 +32,84 @@ function M.open(opts)
   return Snacks.terminal(cmd, opts)
 end
 
+local function is_installed()
+  return vim.fn.executable("claude") == 1
+end
+
 ---@private
 function M.health()
-  local ok = vim.fn.executable("claude") == 1
+  local ok = is_installed()
   Snacks.health[ok and "ok" or "error"](("{claude} %sinstalled"):format(ok and "" or "not "))
+end
+
+--- @return { mode: string, lhs: string, rhs: function, opts: table }[]
+function M.get_keymaps()
+  if not is_installed() then
+    return {}
+  end
+
+  return {
+    {
+      mode = "n",
+      lhs = "<leader>cc",
+      rhs = function()
+        M({ cwd = LazyVim.root.git() })
+      end,
+      opts = { desc = "Claude Code (Root Dir)" },
+    },
+    {
+      mode = "n",
+      lhs = "<leader>cC",
+      rhs = function()
+        M()
+      end,
+      opts = { desc = "Claude Code (cwd)" },
+    },
+  }
+end
+
+--- Set up autocommand to re-apply Claude keymaps after LSP attaches
+function M.setup_autocmd()
+  vim.api.nvim_create_augroup("ClaudeKeymaps", { clear = true })
+
+  vim.api.nvim_create_autocmd("LspAttach", {
+    group = "ClaudeKeymaps",
+    callback = function(args)
+      -- delay execution to run after lazyvim.plugins.lsp.keymaps.on_attach
+      vim.schedule(function()
+        M.apply_keymaps({ bufnr = args.buf })
+      end)
+    end,
+    desc = "Re-apply Claude keymaps after LSP attaches",
+  })
+end
+
+-- Guarded version of setup_autocmd to call from apply_keymaps
+function M._setup_autocmd_once()
+  if M._autocmd_initialized then
+    return
+  end
+  M._autocmd_initialized = true
+
+  M.setup_autocmd()
+end
+
+--- Apply Claude keymaps globally or buffer-local
+--- @param opts? { bufnr?: integer, lsp_attach?: boolean }
+function M.apply_keymaps(opts)
+  opts = opts or {}
+
+  for _, m in ipairs(M.get_keymaps()) do
+    local keymap_opts = vim.tbl_deep_extend("force", { silent = true }, m.opts or {})
+    if opts.bufnr then
+      keymap_opts.buffer = opts.bufnr
+    end
+    vim.keymap.set(m.mode, m.lhs, m.rhs, keymap_opts)
+  end
+
+  if opts.lsp_attach then
+    M._setup_autocmd_once()
+  end
 end
 
 return M
