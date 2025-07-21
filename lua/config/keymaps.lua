@@ -2,8 +2,10 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-local map = LazyVim.safe_keymap_set
+local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
+
+local del = vim.keymap.del
 
 -- saving
 map("n", "<c-s>", ":wq<CR>", {})
@@ -22,5 +24,10 @@ if os.getenv("THEME") == "starship" then
     Snacks.terminal(nil, { cwd = LazyVim.root(), env = { THEME_OVERRIDE = "starship" } })
   end, { desc = "Terminal (Root Dir)" })
 end
+
+-- claude
+-- note: lsp_attach overrides the default codelens keymaps
+require("jswent.claude").apply_keymaps({ lsp_attach = true })
+
 
 require("jswent.transparent").create_toggle():map("<leader>ut")
