@@ -34,6 +34,7 @@ local opts = {
     { import = "lazyvim.plugins.extras.dap.core" },
     -- import/override with your plugins
     { import = "plugins" },
+    { import = "jswent.lang.sourcekit" },
   },
   defaults = {
     lazy = true,
