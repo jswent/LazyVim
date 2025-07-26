@@ -18,11 +18,13 @@ My personalized Neovim configuration built on top of [LazyVim](https://github.co
 
 ### 🛠️ Customizations
 
+- Claude Code integration
 - Enhanced winbar configuration
 - Custom icons and symbols
 - Optimized editor settings
 - Language-specific configurations
-- Custom keymaps for improved workflow
+- Custom keymaps for my workflow
+- Additional options and extras via `options.lua`
 
 ### 🔌 Plugin Management
 
@@ -31,6 +33,7 @@ My personalized Neovim configuration built on top of [LazyVim](https://github.co
   - Editor improvements
   - LSP configurations
   - Additional extras
+- Custom libraries and (mini) plugins
 
 ## 📁 Structure
 
@@ -44,6 +47,7 @@ My personalized Neovim configuration built on top of [LazyVim](https://github.co
 │   │   ├── lazy.lua     # Lazy.nvim configuration
 │   │   └── options.lua  # Neovim options and settings
 │   ├── jswent/          # Personal customizations
+│   │   ├── claude.lua
 │   │   ├── colorscheme.lua
 │   │   ├── transparent.lua
 │   │   ├── winbar.lua
@@ -117,6 +121,24 @@ You can manually control transparency through:
    - `:ToggleTransparent` - Toggle transparency state
 
 The transparency settings automatically reload affected plugins and colorschemes to ensure consistent appearance.
+
+### Claude Code Integration
+
+The Claude Code integration opens the TUI in a float using [`Snacks.terminal`](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md) similar to the default `lazygit` functionality in `LazyVim`. The code can be found in [`jswent/claude.lua`](<https://github.com/jswent/LazyVim/blob/main/lua/jswent/claude.lua>.
+
+The integration creates two new keymaps for opening the float:
+
+- `<leader>cc`: Claude Code (Root Dir)
+- `<leader>cC`: Claude Code (cwd)
+
+> Note: this overrides the default CodeLens keymaps in LazyVim
+
+The integration is only loaded if `claude` is detected on your system, but if you wish to disable it you can use the setting in `options.lua`:
+
+```lua
+-- Use this to enable/disable Claude code integration (default true)
+vim.g.jswent_claude_enabled = false
+```
 
 ### Plugin Management
 
