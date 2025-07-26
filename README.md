@@ -124,7 +124,7 @@ The transparency settings automatically reload affected plugins and colorschemes
 
 ### Claude Code Integration
 
-The Claude Code integration opens the TUI in a float using [`Snacks.terminal`](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md) similar to the default `lazygit` functionality in `LazyVim`. The code can be found in [`jswent/claude.lua`](<https://github.com/jswent/LazyVim/blob/main/lua/jswent/claude.lua>.
+The Claude Code integration opens the TUI in a float using [`Snacks.terminal`](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md) similar to the default `lazygit` functionality in `LazyVim`. The code can be found in [`jswent/claude.lua`](https://github.com/jswent/LazyVim/blob/main/lua/jswent/claude.lua).
 
 The integration creates two new keymaps for opening the float:
 
