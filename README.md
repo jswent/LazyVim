@@ -100,11 +100,11 @@ vim.g.jswent_colorscheme = "gruvbox"
 
 ### Transparency Settings
 
-The configuration includes built-in transparency support with automatic detection for popular terminal emulators:
+The configuration includes built-in transparency support via the `$TRANSPARENT` environment variable. It's recommended to set this in your terminal emulator. For example, add the following to your shell's configuration:
 
-- Ghostty
-- WezTerm
-- Kitty
+```shell
+export TRANSPARENT=true
+```
 
 You can manually control transparency through:
 
