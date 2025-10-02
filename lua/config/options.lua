@@ -22,3 +22,6 @@ vim.g.lazyvim_explorer = "neo-tree"
 
 -- Use this to enable/disable cybu.nvim (default false)
 -- vim.g.jswent_cybu_enabled = true
+
+-- Use this to enable/disable the SourceKit language server (default installed)
+-- vim.g.jswent_sourcekit_enabled = false

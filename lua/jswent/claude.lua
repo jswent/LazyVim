@@ -15,6 +15,16 @@ M.meta = {
 local defaults = {
   win = {
     style = "claude",
+    keys = {
+      ["<S-CR>"] = {
+        function()
+          -- Send a literal newline in terminal mode
+          vim.api.nvim_feedkeys("\n", "n", false)
+        end,
+        mode = "t",
+        desc = "Claude: Shift+Enter as newline",
+      },
+    },
   },
 }
 

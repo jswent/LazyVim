@@ -17,3 +17,18 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     vim.api.nvim_buf_set_option(buf, "filetype", "markdown.mdx")
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c", "cpp", "objc", "objcpp", "h", "hpp", "hh", "tpp" },
+  callback = function()
+    vim.o.autoindent = true
+    vim.o.copyindent = true
+
+    -- Continue comments on <CR> and on o/O
+    vim.opt_local.formatoptions:append({ "r", "o" })
+
+    -- Ensure doxygen '//!' is recognized as a line comment leader.
+    -- Prepend so it wins over plain '//' when matching.
+    vim.opt_local.comments:prepend("://!")
+  end,
+})

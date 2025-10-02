@@ -1,25 +1,23 @@
 return {
   {
     "SmiteshP/nvim-navic",
-    event = "VimEnter",
-    commit = "8649f694d3e76ee10c19255dece6411c29206a54",
+    event = { "LspAttach", "BufReadPost" },
     init = function()
       vim.g.navic_silence = true
-      require("lazyvim.util").lsp.on_attach(function(client, buffer)
-        if client.supports_method("textDocument/documentSymbol") then
-          require("nvim-navic").attach(client, buffer)
-        end
-      end)
     end,
-    opts = function()
-      require("jswent.winbar")
-      return {
-        separator = " ",
-        highlight = true,
-        depth_limit = 5,
-        icons = LazyVim.config.icons.kinds,
-        lazy_update_context = true,
-      }
+    opts = {
+      lsp = { auto_attach = true },
+      highlight = true,
+      depth_limit = 5,
+      icons = LazyVim.config.icons.kinds,
+      lazy_update_context = false, -- Keep false for fast cursor updates
+    },
+    config = function(_, opts)
+      local navic = require("nvim-navic")
+      navic.setup(opts)
+
+      -- Setup winbar after navic is configured
+      require("jswent.winbar").setup()
     end,
   },
 
@@ -32,13 +30,14 @@ return {
   },
 
   {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    build = "cd app && yarn install",
-    init = function()
-      vim.g.mkdp_filetypes = { "markdown" }
-      vim.g.mkdp_browser = "/Applications/Min.app"
-    end,
-    ft = { "markdown" },
+    "nvim-mini/mini.comment",
+    event = "VeryLazy",
+    opts = {
+      options = {
+        custom_commentstring = function()
+          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
+        end,
+      },
+    },
   },
 }
