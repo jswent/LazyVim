@@ -5,9 +5,6 @@ if lsp_installed == 0 or vim.g.jswent_sourcekit_enabled == false then
 end
 
 return {
-  recommended = {
-    ft = "swift",
-  },
   {
     "neovim/nvim-lspconfig",
     opts = function()

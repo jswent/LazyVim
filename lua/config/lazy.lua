@@ -21,7 +21,7 @@ local opts = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     -- import/override with your plugins
     { import = "plugins" },
-    { import = "jswent.lang.sourcekit" },
+    -- { import = "jswent.lang.sourcekit" },
   },
   defaults = {
     lazy = true,
