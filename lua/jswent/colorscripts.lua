@@ -210,6 +210,7 @@ EOF
 ]],
   height = 6,
   padding = 1,
+  disabled = true,
 }
 
 M.tiefighter = {
@@ -249,6 +250,7 @@ EOF
 ]],
   height = 7,
   padding = 1,
+  disabled = true,
 }
 
 return M
