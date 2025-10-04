@@ -24,14 +24,6 @@ return {
   },
 
   {
-    "nacro90/numb.nvim",
-    lazy = false,
-    config = function()
-      require("numb").setup()
-    end,
-  },
-
-  {
     "nvim-mini/mini.comment",
     event = "VeryLazy",
     opts = {
