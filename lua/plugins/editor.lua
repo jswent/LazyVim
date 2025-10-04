@@ -5,6 +5,8 @@ return {
     init = function()
       vim.g.navic_silence = true
     end,
+    ---@module "nvim-navic"
+    ---@type Options
     opts = {
       lsp = { auto_attach = true },
       highlight = true,
