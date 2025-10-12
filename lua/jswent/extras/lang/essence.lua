@@ -7,6 +7,11 @@ return {
     ---@type EssenceConfigUser
     opts = {
       conceal = false,
+      lsp = {
+        fmt = {
+          enabled = false,
+        },
+      },
     },
   },
 }
