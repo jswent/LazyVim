@@ -24,6 +24,14 @@ local defaults = {
         mode = "t",
         desc = "Claude: Shift+Enter as newline",
       },
+      ["<Esc>"] = {
+        function()
+          -- Send literal escape to terminal instead of exiting
+          vim.api.nvim_feedkeys("\x1b", "n", false)
+        end,
+        mode = "t",
+        desc = "Claude: Forward Escape to terminal",
+      },
     },
   },
 }

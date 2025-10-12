@@ -5,6 +5,8 @@ return {
     init = function()
       vim.g.navic_silence = true
     end,
+    ---@module "nvim-navic"
+    ---@type Options
     opts = {
       lsp = { auto_attach = true },
       highlight = true,
@@ -18,14 +20,6 @@ return {
 
       -- Setup winbar after navic is configured
       require("jswent.winbar").setup()
-    end,
-  },
-
-  {
-    "nacro90/numb.nvim",
-    lazy = false,
-    config = function()
-      require("numb").setup()
     end,
   },
 

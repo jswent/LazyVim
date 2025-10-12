@@ -21,7 +21,10 @@ local opts = {
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     -- import/override with your plugins
     { import = "plugins" },
-    -- { import = "jswent.lang.sourcekit" },
+    -- include extras here
+    -- { import = "jswent.extras.lang.essence" },
+    -- { import = "jswent.extras.lang.haskell" },
+    -- { import = "jswent.extras.lang.sourcekit" },
   },
   defaults = {
     lazy = true,
@@ -63,9 +66,10 @@ local extras = {
 }
 
 -- Extend opts.spec with enabled extras
-for name, extra in pairs(extras) do
+for _, extra in pairs(extras) do
   local enabled = extra.enabled
   if type(enabled) == "function" and enabled() or enabled == true then
+    ---@diagnostic disable-next-line
     table.insert(opts.spec, { import = extra.import })
   end
 end
