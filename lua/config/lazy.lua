@@ -25,6 +25,7 @@ local opts = {
     -- { import = "jswent.extras.lang.essence" },
     -- { import = "jswent.extras.lang.haskell" },
     -- { import = "jswent.extras.lang.sourcekit" },
+    -- { import = "jswent.extras.libsemigroups" },
   },
   defaults = {
     lazy = true,
