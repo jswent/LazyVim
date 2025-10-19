@@ -17,22 +17,36 @@ local function config_git_info_section()
     { commit, hl = "special" },
   }
 
+  local items = {
+    {
+      align = "center",
+      text = text,
+    },
+  }
   -- Check if there's an upstream branch
   local upstream = vim.fn.system("git -C " .. config_path .. " rev-parse --abbrev-ref @{u} 2>/dev/null")
   if vim.v.shell_error == 0 and upstream ~= "" then
-    -- Count commits behind
-    local behind = vim.fn.systemlist("git -C " .. config_path .. " rev-list --count HEAD..@{u}")[1]
-    if behind and tonumber(behind) and tonumber(behind) > 0 then
-      table.insert(text, { " (", hl = "special" })
-      table.insert(text, { behind .. "", hl = "DiagnosticWarn" })
-      table.insert(text, { ")", hl = "special" })
+    local output = vim.fn.system("git -C " .. config_path .. " rev-list --left-right --count @{u}...HEAD")
+
+    local behind, ahead = output:match("(%d+)%s+(%d+)")
+    behind, ahead = tonumber(behind), tonumber(ahead)
+
+    local is_behind, is_ahead = (behind or 0) > 0, (ahead or 0) > 0
+    if is_behind or is_ahead then
+      table.insert(items[1].text, { " (", hl = "special" })
+
+      if is_ahead then
+        table.insert(items[1].text, { ahead .. "", hl = "DiagnosticWarn" })
+      end
+
+      if is_behind then
+        table.insert(items[1].text, { behind .. "", hl = "DiagnosticWarn" })
+      end
+      table.insert(items[1].text, { ")", hl = "special" })
     end
   end
 
-  return {
-    align = "center",
-    text = text,
-  }
+  return items
 end
 
 return {
