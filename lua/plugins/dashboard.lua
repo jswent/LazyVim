@@ -17,6 +17,7 @@ local function config_git_info_section()
     { commit, hl = "special" },
   }
 
+  ---@type table<snacks.dashboard.Section>
   local items = {
     {
       align = "center",
@@ -41,6 +42,37 @@ local function config_git_info_section()
 
       if is_behind then
         table.insert(items[1].text, { behind .. "", hl = "DiagnosticWarn" })
+
+        if branch == "main" or branch == "rolling" then
+          table.insert(items, {
+            align = "center",
+            text = {
+              { "Press ", hl = "footer" },
+              { "u", hl = "key" },
+              { " to update", hl = "footer" },
+            },
+            key = "u",
+            action = function(self)
+              local Snacks = _G.Snacks or require("snacks")
+              Snacks.notify.info("Pulling updates from upstream...", { title = "Config" })
+
+              -- Run git pull in the config directory
+              local result = vim.fn.system("git -C " .. config_path .. " pull")
+
+              if vim.v.shell_error == 0 then
+                Snacks.notify.info("Successfully updated config!", { title = "Config" })
+                -- Refresh the dashboard
+                vim.schedule(function()
+                  if self and self.update then
+                    self:update()
+                  end
+                end)
+              else
+                Snacks.notify.error("Failed to pull updates:\n" .. result, { title = "Config" })
+              end
+            end,
+          })
+        end
       end
       table.insert(items[1].text, { ")", hl = "special" })
     end
