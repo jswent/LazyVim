@@ -10,23 +10,39 @@ local function config_git_info_section()
   local branch = vim.fn.systemlist("git -C " .. config_path .. " rev-parse --abbrev-ref HEAD")[1]
   local commit = vim.fn.systemlist("git -C " .. config_path .. " rev-parse --short HEAD")[1]
 
+  -- Check if behind origin
+  local text = {
+    { branch, hl = "special" },
+    { "-", hl = "special" },
+    { commit, hl = "special" },
+  }
+
+  -- Check if there's an upstream branch
+  local upstream = vim.fn.system("git -C " .. config_path .. " rev-parse --abbrev-ref @{u} 2>/dev/null")
+  if vim.v.shell_error == 0 and upstream ~= "" then
+    -- Count commits behind
+    local behind = vim.fn.systemlist("git -C " .. config_path .. " rev-list --count HEAD..@{u}")[1]
+    if behind and tonumber(behind) and tonumber(behind) > 0 then
+      table.insert(text, { " (", hl = "special" })
+      table.insert(text, { behind .. "", hl = "DiagnosticWarn" })
+      table.insert(text, { ")", hl = "special" })
+    end
+  end
+
   return {
     align = "center",
-    text = {
-      { branch, hl = "special" },
-      { "-", hl = "special" },
-      { commit, hl = "special" },
-    },
+    text = text,
   }
 end
-
-require("snacks").dashboard.sections.config_git_info = config_git_info_section
 
 return {
   {
     "folke/snacks.nvim",
     ---@param opts snacks.Config
     opts = function(_, opts)
+      local Snacks = _G.Snacks or require("snacks")
+      Snacks.dashboard.sections.config_git_info = config_git_info_section
+
       local is_large_window = vim.o.columns >= 120
       opts.dashboard = vim.tbl_deep_extend("force", opts.dashboard, {
         preset = vim.tbl_deep_extend("force", opts.dashboard.preset or {}, {
