@@ -9,42 +9,22 @@ return {
     ---@param opts blink.cmp.Config
     opts = function(_, opts)
       opts.enabled = function()
-        if vim.tbl_contains({ "markdown" }, vim.bo.filetype) then
-          return false
-        end
-        return vim.bo.buftype ~= "prompt" and vim.b.completion ~= false
+        return not vim.tbl_contains({ "markdown" }, vim.bo.filetype)
       end
-      --- @type blink.cmp.CmdlineConfig
-      opts.cmdline = {
-        enabled = true,
-        keymap = {
-          -- ["<Tab>"] = { "show", "accept" },
-          ["<C-Space>"] = { "accept" },
-        },
-        sources = function()
-          local type = vim.fn.getcmdtype()
-          -- Commands
-          if type == ":" or type == "@" then
-            return { "cmdline" }
-          end
-          return {}
-        end,
-        completion = { ghost_text = { enabled = true } },
-      }
-      opts.sources.min_keyword_length = function(ctx)
-        -- only applies when typing a command, doesn't apply to arguments
-        if ctx.mode == "cmdline" and string.find(ctx.line, " ") == nil then
-          return 4
-        end
-        return 0
-      end
-      opts.completion.menu.draw.columns = function(ctx)
-        if ctx.mode == "cmdline" then
-          return { { "label", "label_description", gap = 1 } }
-        else
-          return { { "kind_icon" }, { "label", "label_description", gap = 1 } }
-        end
-      end
+      -- opts.sources.min_keyword_length = function(ctx)
+      --   -- only applies when typing a command, doesn't apply to arguments
+      --   if ctx.mode == "cmdline" and string.find(ctx.line, " ") == nil then
+      --     return 4
+      --   end
+      --   return 0
+      -- end
+      -- opts.completion.menu.draw.columns = function(ctx)
+      --   if ctx.mode == "cmdline" then
+      --     return { { "label", "label_description", gap = 1 } }
+      --   else
+      --     return { { "kind_icon" }, { "label", "label_description", gap = 1 } }
+      --   end
+      -- end
       opts.keymap = vim.tbl_deep_extend("force", opts.keymap, {
         ["<C-k>"] = { "select_prev", "fallback" },
         ["<C-j>"] = { "select_next", "fallback" },
