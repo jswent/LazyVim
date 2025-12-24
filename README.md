@@ -47,6 +47,8 @@ My personalized Neovim configuration built on top of [LazyVim](https://github.co
 │   │   ├── lazy.lua     # Lazy.nvim configuration
 │   │   └── options.lua  # Neovim options and settings
 │   ├── jswent/          # Personal customizations
+│   │   ├── extras/      # Optional extra configuration
+│   │   │   └── lang/    # Language extras (julia, haskell, etc.)
 │   │   ├── claude.lua
 │   │   ├── colorscheme.lua
 │   │   ├── transparent.lua
@@ -139,6 +141,53 @@ The integration is only loaded if `claude` is detected on your system, but if yo
 -- Use this to enable/disable Claude code integration (default true)
 vim.g.jswent_claude_enabled = false
 ```
+
+### Language Extras
+
+The configuration includes specialized language support modules in `lua/jswent/extras/lang/`.
+
+#### Julia
+
+The Julia extra provides LSP integration with custom sysimage support for faster startup. The configuration automatically detects your Julia installation:
+
+1. Checks `JULIA_DEPOT_PATH` environment variable
+2. Falls back to `~/.julia` (default depot location)
+3. Requires `julia` binary at `{depot}/bin/julia`
+
+**Setup:**
+
+1. Install the required Julia packages in the nvim-lspconfig environment:
+
+   ```bash
+   julia --project=~/.julia/environments/nvim-lspconfig -e 'using Pkg; Pkg.add(["LanguageServer", "SymbolServer", "StaticLint", "PackageCompiler"])'
+   ```
+
+2. (Optional but recommended) Create a sysimage for faster LSP startup:
+
+   ```bash
+   cd ~/.julia/environments/nvim-lspconfig
+   julia --project=. -e 'using PackageCompiler; create_sysimage([:LanguageServer, :SymbolServer, :StaticLint]; sysimage_path="julials.so")'
+   ```
+
+**Configuration:**
+
+Uncomment the extra in `lua/config/lazy.lua`
+
+```lua
+---@type LazyConfig
+local opts = {
+  spec = {
+    -- add LazyVim and import its plugins
+    { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    -- import/override with your plugins
+    { import = "plugins" },
+    -- include extras here
+    -- { import = "jswent.extras.lang.essence" },
+    { import = "jswent.extras.lang.julia" },
+  },
+}
+```
+
 
 ### Plugin Management
 
