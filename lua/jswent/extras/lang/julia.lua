@@ -1,20 +1,56 @@
 -- Julia LSP configuration with custom sysimage support
--- Environment: ~/.local/julia/environments/nvim-lspconfig/
 --
--- To set up the environment, run:
---   julia --project=~/.local/julia/environments/nvim-lspconfig -e 'using Pkg; Pkg.add(["LanguageServer", "SymbolServer", "StaticLint", "PackageCompiler"])'
+-- Depot Detection:
+--   1. Checks JULIA_DEPOT_PATH environment variable
+--   2. Falls back to ~/.julia (default depot location)
+--   Requires julia binary at {depot}/bin/julia
 --
--- Then create the sysimage for faster startup (run from the environment directory):
---   cd ~/.local/julia/environments/nvim-lspconfig
+-- Environment: {depot}/environments/nvim-lspconfig/
+--
+-- To set up the environment (using default depot ~/.julia):
+--   julia --project=~/.julia/environments/nvim-lspconfig -e 'using Pkg; Pkg.add(["LanguageServer", "SymbolServer", "StaticLint", "PackageCompiler"])'
+--
+-- Then create the sysimage for faster startup (optional but recommended):
+--   cd ~/.julia/environments/nvim-lspconfig
 --   julia --project=. -e 'using PackageCompiler; create_sysimage([:LanguageServer, :SymbolServer, :StaticLint]; sysimage_path="julials.so")'
 
-local env_path = vim.fn.expand("~/.local/julia/environments/nvim-lspconfig/")
+---@return string|nil depot_path The Julia depot path if found
+---@return string|nil error_message Error message if depot not found
+local function get_depot_path()
+  -- 1. Check JULIA_DEPOT_PATH environment variable
+  local depot = vim.env.JULIA_DEPOT_PATH
+  if depot and depot ~= "" then
+    return depot, nil
+  end
+
+  -- TODO
+  -- 2. Find julia in PATH and resolve to depot
+
+  -- 3. Check default ~/.julia location
+  local default_depot = vim.fn.expand("~/.julia")
+  local default_julia_bin = default_depot .. "/bin/julia"
+  if vim.fn.executable(default_julia_bin) == 1 then
+    return default_depot, nil
+  end
+
+  -- No depot found, return err
+  return nil, "Julia depot not found. Skipping julia extra."
+end
+
+local julia_depot, err = get_depot_path()
+if not julia_depot then
+  vim.notify(err, vim.log.levels.WARN)
+  return {}
+end
+
+local julia_bin = julia_depot .. "/bin/julia"
+local env_path = julia_depot .. "/environments/nvim-lspconfig/"
 local sysimage_path = env_path .. "julials.so"
 
 -- Build the julia command with sysimage if it exists
 local function get_julia_cmd()
   local cmd = {
-    "julia",
+    julia_bin,
     "--project=" .. env_path,
     "--startup-file=no",
     "--history-file=no",
