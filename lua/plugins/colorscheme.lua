@@ -14,6 +14,9 @@ return {
     "folke/tokyonight.nvim",
     lazy = true,
     opts = function(_, opts)
+      --- set style based on background
+      opts.style = vim.o.background == "light" and "day" or "moon"
+      --- set transparency
       local transparent = require("jswent.transparent")
       if transparent.get_state() == true then
         opts.transparent = true
